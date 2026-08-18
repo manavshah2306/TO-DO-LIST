@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My To-Do List</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 28px;
+        }
+        
+        .input-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+        
+        input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        button {
+            padding: 12px 30px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-weight: 600;
+        }
+        
+        button:hover {
+            background: #764ba2;
+        }
+        
+        ul {
+            list-style: none;
+        }
+        
+        li {
+            padding: 15px;
+            background: #f5f5f5;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        li.completed {
+            background: #e8f5e9;
+        }
+        
+        li.completed span {
+            text-decoration: line-through;
+            color: #999;
+        }
+        
+        .task-text {
+            flex: 1;
+        }
+        
+        .task-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .check-btn, .delete-btn {
+            padding: 5px 12px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .check-btn {
+            background: #4caf50;
+            color: white;
+        }
+        
+        .check-btn:hover {
+            background: #45a049;
+        }
+        
+        .delete-btn {
+            background: #f44336;
+            color: white;
+        }
+        
+        .delete-btn:hover {
+            background: #da190b;
+        }
+        
+        .empty-state {
+            text-align: center;
+            color: #999;
+            padding: 40px 20px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📋 My To-Do List</h1>
+        
+        <div class="input-container">
+            <input type="text" id="taskInput" placeholder="Add a new task...">
+            <button onclick="addTask()">Add</button>
+        </div>
+        
+        <ul id="taskList">
+            <div class="empty-state">No tasks yet. Add one to get started!</div>
+        </ul>
+    </div>
+    
+    <script>
+        function addTask() {
+            const input = document.getElementById('taskInput');
+            const taskList = document.getElementById('taskList');
+            
+            if (input.value.trim() === '') return;
+            
+            // Remove empty state message
+            if (taskList.querySelector('.empty-state')) {
+                taskList.innerHTML = '';
+            }
+            
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <span class="task-text">${escapeHtml(input.value)}</span>
+                <div class="task-buttons">
+                    <button class="check-btn" onclick="toggleTask(this)">✓</button>
+                    <button class="delete-btn" onclick="deleteTask(this)">✕</button>
+                </div>
+            `;
+            
+            taskList.appendChild(li);
+            input.value = '';
+            input.focus();
+            saveTasks();
+        }
+        
+        function toggleTask(btn) {
+            btn.parentElement.parentElement.classList.toggle('completed');
+            saveTasks();
+        }
+        
+        function deleteTask(btn) {
+            btn.parentElement.parentElement.remove();
+            if (document.getElementById('taskList').children.length === 0) {
+                document.getElementById('taskList').innerHTML = '<div class="empty-state">No tasks yet. Add one to get started!</div>';
+            }
+            saveTasks();
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        function saveTasks() {
+            const tasks = [];
+            document.getElementById('taskList').querySelectorAll('li').forEach(li => {
+                const text = li.querySelector('.task-text').textContent;
+                const completed = li.classList.contains('completed');
+                tasks.push({ text, completed });
+            });
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+        
+        function loadTasks() {
+            const saved = localStorage.getItem('tasks');
+            if (saved) {
+                const tasks = JSON.parse(saved);
+                document.getElementById('taskList').innerHTML = '';
+                tasks.forEach(task => {
+                    const li = document.createElement('li');
+                    if (task.completed) li.classList.add('completed');
+                    li.innerHTML = `
+                        <span class="task-text">${escapeHtml(task.text)}</span>
+                        <div class="task-buttons">
+                            <button class="check-btn" onclick="toggleTask(this)">✓</button>
+                            <button class="delete-btn" onclick="deleteTask(this)">✕</button>
+                        </div>
+                    `;
+                    document.getElementById('taskList').appendChild(li);
+                });
+            }
+        }
+        
+        // Allow Enter key to add tasks
+        document.getElementById('taskInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') addTask();
+        });
+        
+        // Load tasks on page load
+        window.addEventListener('DOMContentLoaded', loadTasks);
+    </script>
+</body>
+</html>
