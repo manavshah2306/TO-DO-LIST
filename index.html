@@ -16,10 +16,18 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
+            padding: 0;
+            animation: bgShift 15s ease infinite;
+            margin: 0;
+        }
+        
+        .main-content {
+            display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
-            animation: bgShift 15s ease infinite;
+            flex: 1;
         }
         
         @keyframes bgShift {
@@ -28,6 +36,208 @@
             }
             50% {
                 background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            }
+        }
+        
+        /* Navbar Styles */
+        nav {
+            background: linear-gradient(180deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%);
+            backdrop-filter: blur(10px);
+            padding: 0;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            animation: slideInDown 0.6s ease-out;
+        }
+        
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .nav-container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+            width: 100%;
+        }
+        
+        .nav-logo {
+            color: white;
+            font-size: 26px;
+            font-weight: 800;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            letter-spacing: 0.5px;
+            min-width: fit-content;
+        }
+        
+        .nav-logo:hover {
+            transform: scale(1.08);
+            filter: drop-shadow(0 4px 12px rgba(255, 255, 255, 0.3));
+        }
+        
+        .nav-center {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            margin: 0 40px;
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 5px;
+            list-style: none;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 15px;
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .nav-item {
+            position: relative;
+        }
+        
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 10px 18px;
+            transition: all 0.3s ease;
+            display: block;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+        
+        .nav-link:hover::before {
+            left: 0;
+        }
+        
+        .nav-link:hover {
+            transform: translateY(-3px);
+            color: #fff;
+        }
+        
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            color: white;
+        }
+        
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            min-width: fit-content;
+        }
+        
+        .nav-stats {
+            color: white;
+            font-weight: 700;
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 25px;
+            animation: fadeIn 0.6s ease-out 0.3s both;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .nav-stats:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .stat-icon {
+            font-size: 18px;
+        }
+        
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 6px;
+        }
+        
+        .hamburger span {
+            width: 28px;
+            height: 3px;
+            background: white;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 0 20px;
+            }
+            
+            .nav-center {
+                margin: 0 20px;
+            }
+            
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                flex-direction: column;
+                gap: 10px;
+                padding: 20px;
+                background: rgba(102, 126, 234, 0.98);
+                border-radius: 0;
+            }
+            
+            .nav-menu.active {
+                display: flex;
+            }
+            
+            .hamburger {
+                display: flex;
+            }
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
             }
         }
         
@@ -293,17 +503,45 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>📋 My To-Do List</h1>
-        
-        <div class="input-container">
-            <input type="text" id="taskInput" placeholder="Add a new task...">
-            <button onclick="addTask()">Add</button>
+    <nav>
+        <div class="nav-container">
+            <a href="#" class="nav-logo">📋 TaskFlow</a>
+            
+            <div class="nav-center">
+                <ul class="nav-menu" id="navMenu">
+                    <li class="nav-item"><a href="#" class="nav-link active">📍 Home</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">ℹ️ About</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">❓ Help</a></li>
+                </ul>
+            </div>
+            
+            <div class="nav-right">
+                <div class="nav-stats">
+                    <span class="stat-icon">✅</span>
+                    <span id="taskCount">0</span>
+                </div>
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
         </div>
-        
-        <ul id="taskList">
-            <div class="empty-state">No tasks yet. Add one to get started!</div>
-        </ul>
+    </nav>
+    
+    <div class="main-content">
+        <div class="container">
+            <h1>📋 My To-Do List</h1>
+            
+            <div class="input-container">
+                <input type="text" id="taskInput" placeholder="Add a new task...">
+                <button onclick="addTask()">Add</button>
+            </div>
+            
+            <ul id="taskList">
+                <div class="empty-state">No tasks yet. Add one to get started!</div>
+            </ul>
+        </div>
     </div>
     
     <script>
@@ -356,6 +594,11 @@
             return div.innerHTML;
         }
         
+        function updateTaskCount() {
+            const taskCount = document.getElementById('taskList').querySelectorAll('li').length;
+            document.getElementById('taskCount').textContent = taskCount;
+        }
+        
         function saveTasks() {
             const tasks = [];
             document.getElementById('taskList').querySelectorAll('li').forEach(li => {
@@ -364,6 +607,7 @@
                 tasks.push({ text, completed });
             });
             localStorage.setItem('tasks', JSON.stringify(tasks));
+            updateTaskCount();
         }
         
         function loadTasks() {
@@ -384,12 +628,30 @@
                     document.getElementById('taskList').appendChild(li);
                 });
             }
+            updateTaskCount();
         }
         
         // Allow Enter key to add tasks
         document.getElementById('taskInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') addTask();
         });
+        
+        // Hamburger menu functionality
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('navMenu');
+        
+        if (hamburger) {
+            hamburger.addEventListener('click', function() {
+                navMenu.classList.toggle('active');
+            });
+            
+            // Close menu when a link is clicked
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function() {
+                    navMenu.classList.remove('active');
+                });
+            });
+        }
         
         // Load tasks on page load
         window.addEventListener('DOMContentLoaded', loadTasks);
